@@ -69,6 +69,21 @@ sealed class ReaderEvent {
         val noAppsFound: () -> Unit
     ) : ReaderEvent()
 
+    data class OnTextToSpeech(
+        val txtSpeech: String,
+        val context: ComponentActivity,
+    ) : ReaderEvent()
+
+    data class OnShowHideMenuTTS(
+        val show: Boolean? = null,
+        val fullscreenMode: Boolean,
+        val activity: ComponentActivity
+    ) : ReaderEvent()
+
+    data class OnChangeProgressTTS(
+        val progress: Float
+    ) : ReaderEvent()
+
     data class OnOpenShareApp(
         val textToShare: String,
         val context: ComponentActivity,

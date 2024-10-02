@@ -19,6 +19,7 @@ sealed class MainEvent {
     data class OnChangeCheckForUpdates(val bool: Boolean) : MainEvent()
     data class OnChangeSidePadding(val sidePadding: Int) : MainEvent()
     data class OnChangeDoubleClickTranslation(val bool: Boolean) : MainEvent()
+    data class OnChangeDoubleClickTextToSpeech(val bool: Boolean) : MainEvent()
     data class OnChangeFastColorPresetChange(val bool: Boolean) : MainEvent()
     data class OnChangeBrowseFilesStructure(val structure: String) : MainEvent()
     data class OnChangeBrowseLayout(val layout: String) : MainEvent()

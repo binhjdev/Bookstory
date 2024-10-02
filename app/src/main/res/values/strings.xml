@@ -200,6 +200,7 @@
     <string name="font_reader_settings">Font</string>
     <string name="text_reader_settings">Text</string>
     <string name="translator_reader_settings">Translator</string>
+    <string name="text_to_speech_reader_settings">Text To Speech</string>
     <string name="padding_reader_settings">Padding</string>
     <string name="misc_reader_settings">Misc</string>
     <string name="reading_speed_reader_settings">Reading speed</string>
@@ -236,7 +237,9 @@
     <string name="side_padding_option">Side padding</string>
     <string name="vertical_padding_option">Vertical padding</string>
     <string name="double_click_translation_option">Double click translation</string>
+    <string name="double_click_text_to_speech_option">Double click text to speech</string>
     <string name="double_click_translation_option_desc">Double click on paragraph to translate it</string>
+    <string name="double_click_text_tp_speech_option_desc">Double click on paragraph to text to speech it</string>
     <string name="fast_color_preset_change_option">Fast color preset change</string>
     <string name="fast_color_preset_change_option_desc">Swipe left or right to change color preset</string>
     <string name="text_alignment_option">Text alignment</string>

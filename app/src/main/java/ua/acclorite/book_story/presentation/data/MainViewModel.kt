@@ -225,6 +225,17 @@ class MainViewModel @Inject constructor(
                 }
             }
 
+            is MainEvent.OnChangeDoubleClickTextToSpeech -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    setDatastore.execute(DataStoreConstants.DOUBLE_CLICK_TEXT_TO_SPEECH, event.bool)
+                    updateStateWithSavedHandle {
+                        it.copy(
+                            doubleClickTextToSpeech = event.bool
+                        )
+                    }
+                }
+            }
+
             is MainEvent.OnChangeFastColorPresetChange -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     setDatastore.execute(DataStoreConstants.FAST_COLOR_PRESET_CHANGE, event.bool)

@@ -257,6 +257,7 @@ fun CustomSelectionContainer(
     onShareRequested: ((String) -> Unit),
     onWebSearchRequested: ((String) -> Unit),
     onTranslateRequested: ((String) -> Unit),
+    onTextToSpeechRequested: ((String) -> Unit),
     onDictionaryRequested: ((String) -> Unit),
     content: @Composable (toolbarHidden: Boolean) -> Unit
 ) {

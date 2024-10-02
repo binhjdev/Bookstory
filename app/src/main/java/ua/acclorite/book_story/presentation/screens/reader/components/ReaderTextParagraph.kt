@@ -2,6 +2,7 @@ package ua.acclorite.book_story.presentation.screens.reader.components
 
 import android.content.Context
 import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ import ua.acclorite.book_story.domain.model.FontWithName
 import ua.acclorite.book_story.presentation.core.components.LocalReaderViewModel
 import ua.acclorite.book_story.presentation.core.util.noRippleClickable
 import ua.acclorite.book_story.presentation.core.util.showToast
+import ua.acclorite.book_story.presentation.data.MainEvent
 import ua.acclorite.book_story.presentation.screens.reader.data.ReaderEvent
 import ua.acclorite.book_story.presentation.screens.settings.nested.reader.data.ReaderTextAlignment
 
@@ -60,6 +62,7 @@ fun LazyItemScope.ReaderTextParagraph(
     paragraphIndentation: TextUnit,
     fullscreenMode: Boolean,
     doubleClickTranslationEnabled: Boolean,
+    doubleClickTextToSpeechEnabled: Boolean,
     toolbarHidden: Boolean
 ) {
     val onEvent = LocalReaderViewModel.current.onEvent
@@ -82,20 +85,34 @@ fun LazyItemScope.ReaderTextParagraph(
             text = line,
             modifier = Modifier.then(
                 if (
-                    doubleClickTranslationEnabled &&
+                   doubleClickTextToSpeechEnabled &&
                     toolbarHidden
                 ) {
                     Modifier.noRippleClickable(
                         onDoubleClick = {
+//                            onEvent(
+//                                ReaderEvent.OnOpenTranslator(
+//                                    textToTranslate = line,
+//                                    translateWholeParagraph = true,
+//                                    context = context as ComponentActivity,
+//                                    noAppsFound = {
+//                                        context.getString(R.string.error_no_translator)
+//                                            .showToast(context = context, longToast = false)
+//                                    }
+//                                )
+//                            )
                             onEvent(
-                                ReaderEvent.OnOpenTranslator(
-                                    textToTranslate = line,
-                                    translateWholeParagraph = true,
+                                ReaderEvent.OnTextToSpeech(
+                                    txtSpeech = line,
                                     context = context as ComponentActivity,
-                                    noAppsFound = {
-                                        context.getString(R.string.error_no_translator)
-                                            .showToast(context = context, longToast = false)
-                                    }
+                                )
+                            )
+
+                            onEvent(
+                                ReaderEvent.OnShowHideMenuTTS(
+                                    show = true,
+                                    fullscreenMode = fullscreenMode,
+                                    activity = context
                                 )
                             )
                         },

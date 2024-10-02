@@ -3,6 +3,7 @@ package ua.acclorite.book_story.presentation.screens.reader.data
 import android.app.SearchManager
 import android.content.Intent
 import android.net.Uri
+import android.speech.tts.TextToSpeech
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.snapshotFlow
 import androidx.core.view.WindowCompat
@@ -34,6 +35,7 @@ import ua.acclorite.book_story.domain.util.UIText
 import ua.acclorite.book_story.presentation.core.navigation.Screen
 import ua.acclorite.book_story.presentation.core.util.BaseViewModel
 import ua.acclorite.book_story.presentation.core.util.launchActivity
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -312,6 +314,55 @@ class ReaderViewModel @Inject constructor(
 
                         event.noAppsFound()
                     }
+                }
+
+                is ReaderEvent.OnTextToSpeech -> {
+                    launch {
+                        var tts: TextToSpeech? = null
+
+                        tts = TextToSpeech(
+                            event.context
+                        ) {
+                            if (it == TextToSpeech.SUCCESS) {
+                                tts?.let { txtToSpeech ->
+                                    txtToSpeech.language = Locale.ENGLISH
+                                    txtToSpeech.speak(
+                                        event.txtSpeech,
+                                        TextToSpeech.QUEUE_ADD,
+                                        null,
+                                        null
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                is ReaderEvent.OnShowHideMenuTTS -> {
+                    launch {
+                        if (_state.value.lockMenu) {
+                            return@launch
+                        }
+
+                        val shouldShow = event.show ?: !_state.value.showMenuTTS
+
+                        yield()
+
+                        showSystemBars(
+                            show = shouldShow,
+                            fullscreenMode = event.fullscreenMode,
+                            activity = event.activity
+                        )
+                        _state.update {
+                            it.copy(
+                                showMenuTTS = shouldShow
+                            )
+                        }
+                    }
+                }
+
+                is ReaderEvent.OnChangeProgressTTS -> {
+
                 }
 
                 is ReaderEvent.OnOpenShareApp -> {

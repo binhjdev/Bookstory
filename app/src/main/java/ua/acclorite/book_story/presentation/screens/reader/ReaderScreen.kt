@@ -82,6 +82,7 @@ import ua.acclorite.book_story.presentation.screens.reader.components.ReaderChap
 import ua.acclorite.book_story.presentation.screens.reader.components.ReaderPerceptionExpander
 import ua.acclorite.book_story.presentation.screens.reader.components.ReaderTextParagraph
 import ua.acclorite.book_story.presentation.screens.reader.components.app_bar.ReaderBottomBar
+import ua.acclorite.book_story.presentation.screens.reader.components.app_bar.ReaderBottomBarTextToSpeech
 import ua.acclorite.book_story.presentation.screens.reader.components.app_bar.ReaderTopBar
 import ua.acclorite.book_story.presentation.screens.reader.components.readerFastColorPresetChange
 import ua.acclorite.book_story.presentation.screens.reader.components.settings_bottom_sheet.ReaderSettingsBottomSheet
@@ -145,6 +146,15 @@ fun ReaderScreenRoot(screen: Screen.Reader) {
                 show = state.value.showMenu,
                 fullscreenMode = mainState.value.fullscreen,
                 saveCheckpoint = false,
+                activity = context
+            )
+        )
+    }
+    LaunchedEffect(mainState.value.fullscreen) {
+        onEvent(
+            ReaderEvent.OnShowHideMenuTTS(
+                show = state.value.showMenuTTS,
+                fullscreenMode = mainState.value.fullscreen,
                 activity = context
             )
         )
@@ -374,6 +384,15 @@ private fun ReaderScreen(lazyListState: LazyListState) {
             ) {
                 ReaderBottomBar()
             }
+
+            CustomAnimatedVisibility(
+                modifier = Modifier.fillMaxWidth(),
+                visible = state.value.showMenuTTS,
+                enter = slideInVertically { it },
+                exit = slideOutVertically { it }
+            ) {
+                ReaderBottomBarTextToSpeech()
+            }
         }
     ) {
         CustomSelectionContainer(
@@ -417,6 +436,14 @@ private fun ReaderScreen(lazyListState: LazyListState) {
                             context.getString(R.string.error_no_translator)
                                 .showToast(context = context, longToast = false)
                         }
+                    )
+                )
+            },
+            onTextToSpeechRequested = { txtToSpeech ->
+                onEvent(
+                    ReaderEvent.OnTextToSpeech(
+                        txtSpeech = txtToSpeech,
+                        context = context
                     )
                 )
             },
@@ -506,6 +533,7 @@ private fun ReaderScreen(lazyListState: LazyListState) {
                         paragraphIndentation = paragraphIndentation,
                         fullscreenMode = mainState.value.fullscreen,
                         doubleClickTranslationEnabled = mainState.value.doubleClickTranslation,
+                        doubleClickTextToSpeechEnabled = mainState.value.doubleClickTextToSpeech,
                         toolbarHidden = toolbarHidden
                     )
                 }
