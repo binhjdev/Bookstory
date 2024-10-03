@@ -30,6 +30,7 @@ import ua.acclorite.book_story.presentation.screens.settings.nested.reader.compo
 import ua.acclorite.book_story.presentation.screens.settings.nested.reader.components.subcategories.PaddingSubcategory
 import ua.acclorite.book_story.presentation.screens.settings.nested.reader.components.subcategories.ReadingSpeedSubcategory
 import ua.acclorite.book_story.presentation.screens.settings.nested.reader.components.subcategories.TextSubcategory
+import ua.acclorite.book_story.presentation.screens.settings.nested.reader.components.subcategories.TextToSpeechSubcategory
 import ua.acclorite.book_story.presentation.screens.settings.nested.reader.components.subcategories.TranslatorSubcategory
 
 /**
@@ -68,6 +69,13 @@ fun ReaderSettingsBottomSheet() {
                 fullscreenMode = mainState.value.fullscreen,
                 saveCheckpoint = false,
                 activity = context as ComponentActivity
+            )
+        )
+        onEvent(
+            ReaderEvent.OnShowHideMenuTTS(
+                show = pagerState.currentPage != 2,
+                fullscreenMode = mainState.value.fullscreen,
+                activity = context
             )
         )
     }
@@ -120,7 +128,7 @@ fun ReaderSettingsBottomSheet() {
                             topPadding = 22.dp,
                             bottomPadding = 0.dp
                         )
-                        TranslatorSubcategory(
+                        TextToSpeechSubcategory(
                             titleColor = { MaterialTheme.colorScheme.onSurface },
                             showDivider = false,
                             topPadding = 22.dp,

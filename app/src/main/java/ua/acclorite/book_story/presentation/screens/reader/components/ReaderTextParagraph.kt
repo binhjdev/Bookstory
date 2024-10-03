@@ -2,7 +2,6 @@ package ua.acclorite.book_story.presentation.screens.reader.components
 
 import android.content.Context
 import androidx.activity.ComponentActivity
-import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,12 +19,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
-import ua.acclorite.book_story.R
 import ua.acclorite.book_story.domain.model.FontWithName
 import ua.acclorite.book_story.presentation.core.components.LocalReaderViewModel
 import ua.acclorite.book_story.presentation.core.util.noRippleClickable
-import ua.acclorite.book_story.presentation.core.util.showToast
-import ua.acclorite.book_story.presentation.data.MainEvent
 import ua.acclorite.book_story.presentation.screens.reader.data.ReaderEvent
 import ua.acclorite.book_story.presentation.screens.settings.nested.reader.data.ReaderTextAlignment
 
@@ -44,7 +40,6 @@ import ua.acclorite.book_story.presentation.screens.settings.nested.reader.data.
  * @param sidePadding Line's side padding.
  * @param paragraphIndentation Paragraph Indentation for this line.
  * @param fullscreenMode Whether Reader is in fullscreen mode.
- * @param doubleClickTranslationEnabled Whether Double Click Translation is enabled.
  * @param toolbarHidden Whether selection toolBar is hidden.
  */
 @Composable
@@ -61,7 +56,6 @@ fun LazyItemScope.ReaderTextParagraph(
     sidePadding: Dp,
     paragraphIndentation: TextUnit,
     fullscreenMode: Boolean,
-    doubleClickTranslationEnabled: Boolean,
     doubleClickTextToSpeechEnabled: Boolean,
     toolbarHidden: Boolean
 ) {
@@ -90,17 +84,6 @@ fun LazyItemScope.ReaderTextParagraph(
                 ) {
                     Modifier.noRippleClickable(
                         onDoubleClick = {
-//                            onEvent(
-//                                ReaderEvent.OnOpenTranslator(
-//                                    textToTranslate = line,
-//                                    translateWholeParagraph = true,
-//                                    context = context as ComponentActivity,
-//                                    noAppsFound = {
-//                                        context.getString(R.string.error_no_translator)
-//                                            .showToast(context = context, longToast = false)
-//                                    }
-//                                )
-//                            )
                             onEvent(
                                 ReaderEvent.OnTextToSpeech(
                                     txtSpeech = line,
@@ -110,7 +93,6 @@ fun LazyItemScope.ReaderTextParagraph(
 
                             onEvent(
                                 ReaderEvent.OnShowHideMenuTTS(
-                                    show = true,
                                     fullscreenMode = fullscreenMode,
                                     activity = context
                                 )

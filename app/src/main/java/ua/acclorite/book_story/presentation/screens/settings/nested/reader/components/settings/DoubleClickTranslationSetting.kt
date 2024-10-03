@@ -17,15 +17,10 @@ fun DoubleClickTranslationSetting() {
     val onMainEvent = LocalMainViewModel.current.onEvent
 
     SwitchWithTitle(
-        selected = state.value.doubleClickTranslation,
+        selected = false,
         title = stringResource(id = R.string.double_click_translation_option),
         description = stringResource(id = R.string.double_click_translation_option_desc),
         onClick = {
-            onMainEvent(
-                MainEvent.OnChangeDoubleClickTranslation(
-                    !state.value.doubleClickTranslation
-                )
-            )
         }
     )
 }

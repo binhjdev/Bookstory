@@ -272,50 +272,6 @@ class ReaderViewModel @Inject constructor(
                     }
                 }
 
-                is ReaderEvent.OnOpenTranslator -> {
-                    launch {
-                        val translatorIntent = Intent()
-                        val browserIntent = Intent()
-
-                        translatorIntent.type = "text/plain"
-                        translatorIntent.action = Intent.ACTION_PROCESS_TEXT
-
-                        browserIntent.action = Intent.ACTION_WEB_SEARCH
-
-                        translatorIntent.putExtra(
-                            Intent.EXTRA_PROCESS_TEXT,
-                            event.textToTranslate
-                        )
-                        translatorIntent.putExtra(Intent.EXTRA_PROCESS_TEXT_READONLY, true)
-
-                        browserIntent.putExtra(
-                            SearchManager.QUERY,
-                            "translate: ${event.textToTranslate.trim()}"
-                        )
-
-                        var translatorFailure = false
-                        translatorIntent.launchActivity(
-                            event.context,
-                            createChooser = !event.translateWholeParagraph
-                        ) {
-                            translatorFailure = true
-                        }
-                        if (!translatorFailure) {
-                            return@launch
-                        }
-
-                        var browserFailure = false
-                        browserIntent.launchActivity(event.context) {
-                            browserFailure = true
-                        }
-                        if (!browserFailure) {
-                            return@launch
-                        }
-
-                        event.noAppsFound()
-                    }
-                }
-
                 is ReaderEvent.OnTextToSpeech -> {
                     launch {
                         var tts: TextToSpeech? = null
@@ -362,7 +318,22 @@ class ReaderViewModel @Inject constructor(
                 }
 
                 is ReaderEvent.OnChangeProgressTTS -> {
+                    launch(Dispatchers.IO) {
+                        _state.update {
+                            it.copy(
+                                speedRate = it.speedRate
+                            )
+                        }
+                    }
+                }
 
+                is ReaderEvent.OnScrollTTS -> {
+                    scrollJob?.cancel()
+                    scrollJob = launch {
+                        delay(300)
+
+                        yield()
+                    }
                 }
 
                 is ReaderEvent.OnOpenShareApp -> {
@@ -483,6 +454,13 @@ class ReaderViewModel @Inject constructor(
                         show = false,
                         fullscreenMode = fullscreenMode,
                         saveCheckpoint = false,
+                        activity = activity
+                    )
+                )
+                onEvent(
+                    ReaderEvent.OnShowHideMenuTTS(
+                        show = false,
+                        fullscreenMode = fullscreenMode,
                         activity = activity
                     )
                 )

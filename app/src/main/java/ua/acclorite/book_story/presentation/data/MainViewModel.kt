@@ -214,17 +214,6 @@ class MainViewModel @Inject constructor(
                 }
             }
 
-            is MainEvent.OnChangeDoubleClickTranslation -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    setDatastore.execute(DataStoreConstants.DOUBLE_CLICK_TRANSLATION, event.bool)
-                    updateStateWithSavedHandle {
-                        it.copy(
-                            doubleClickTranslation = event.bool
-                        )
-                    }
-                }
-            }
-
             is MainEvent.OnChangeDoubleClickTextToSpeech -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     setDatastore.execute(DataStoreConstants.DOUBLE_CLICK_TEXT_TO_SPEECH, event.bool)

@@ -50,11 +50,6 @@ fun LazyListScope.ReaderSettingsCategory(
         topPadding = 22.dp,
         bottomPadding = 0.dp
     )
-    TranslatorSubcategory(
-        titleColor = titleColor,
-        topPadding = 22.dp,
-        bottomPadding = 0.dp
-    )
     TextToSpeechSubcategory(
         titleColor = titleColor,
         topPadding = 22.dp,

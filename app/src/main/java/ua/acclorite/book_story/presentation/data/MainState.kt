@@ -4,7 +4,6 @@ package ua.acclorite.book_story.presentation.data
 
 import android.os.Build
 import android.os.Parcelable
-import android.speech.tts.TextToSpeech
 import androidx.annotation.Keep
 import androidx.compose.runtime.Immutable
 import androidx.datastore.preferences.core.Preferences
@@ -67,7 +66,6 @@ data class MainState(
     val paragraphIndentation: Int = provideDefaultValue { 0 },
     val sidePadding: Int = provideDefaultValue { 6 },
     val verticalPadding: Int = provideDefaultValue { 0 },
-    val doubleClickTranslation: Boolean = provideDefaultValue { false },
     val doubleClickTextToSpeech: Boolean = provideDefaultValue { false },
     val fastColorPresetChange: Boolean = provideDefaultValue { true },
     val textAlignment: ReaderTextAlignment = provideDefaultValue { ReaderTextAlignment.START },
@@ -172,10 +170,6 @@ data class MainState(
                     sidePadding = provideValue(
                         SIDE_PADDING
                     ) { sidePadding },
-
-                    doubleClickTranslation = provideValue(
-                        DOUBLE_CLICK_TRANSLATION
-                    ) { doubleClickTranslation },
 
                     doubleClickTextToSpeech = provideValue(
                         DOUBLE_CLICK_TEXT_TO_SPEECH

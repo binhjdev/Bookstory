@@ -62,13 +62,6 @@ sealed class ReaderEvent {
         val pagerState: PagerState?
     ) : ReaderEvent()
 
-    data class OnOpenTranslator(
-        val textToTranslate: String,
-        val translateWholeParagraph: Boolean,
-        val context: ComponentActivity,
-        val noAppsFound: () -> Unit
-    ) : ReaderEvent()
-
     data class OnTextToSpeech(
         val txtSpeech: String,
         val context: ComponentActivity,
@@ -81,6 +74,10 @@ sealed class ReaderEvent {
     ) : ReaderEvent()
 
     data class OnChangeProgressTTS(
+        val progress: Float
+    ) : ReaderEvent()
+
+    data class OnScrollTTS(
         val progress: Float
     ) : ReaderEvent()
 

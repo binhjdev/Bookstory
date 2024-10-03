@@ -138,6 +138,12 @@ fun ReaderScreenRoot(screen: Screen.Reader) {
                     activity = context
                 )
             )
+            onEvent(
+                ReaderEvent.OnShowHideMenuTTS(
+                    fullscreenMode = mainState.value.fullscreen,
+                    activity = context
+                )
+            )
         }
     }
     LaunchedEffect(mainState.value.fullscreen) {
@@ -149,8 +155,7 @@ fun ReaderScreenRoot(screen: Screen.Reader) {
                 activity = context
             )
         )
-    }
-    LaunchedEffect(mainState.value.fullscreen) {
+
         onEvent(
             ReaderEvent.OnShowHideMenuTTS(
                 show = state.value.showMenuTTS,
@@ -214,12 +219,21 @@ private fun ReaderScreen(lazyListState: LazyListState) {
                     if (!state.value.showMenu) return@let
                     if (state.value.lockMenu) return@let
                     if (!mainState.value.hideBarsOnFastScroll) return@let
+                    if (!state.value.showMenuTTS) return@let
 
                     onEvent(
                         ReaderEvent.OnShowHideMenu(
                             show = false,
                             fullscreenMode = mainState.value.fullscreen,
                             saveCheckpoint = false,
+                            activity = context
+                        )
+                    )
+
+                    onEvent(
+                        ReaderEvent.OnShowHideMenuTTS(
+                            show = false,
+                            fullscreenMode = mainState.value.fullscreen,
                             activity = context
                         )
                     )
@@ -426,19 +440,6 @@ private fun ReaderScreen(lazyListState: LazyListState) {
                     )
                 )
             },
-            onTranslateRequested = { textToTranslate ->
-                onEvent(
-                    ReaderEvent.OnOpenTranslator(
-                        textToTranslate = textToTranslate,
-                        translateWholeParagraph = false,
-                        context,
-                        noAppsFound = {
-                            context.getString(R.string.error_no_translator)
-                                .showToast(context = context, longToast = false)
-                        }
-                    )
-                )
-            },
             onTextToSpeechRequested = { txtToSpeech ->
                 onEvent(
                     ReaderEvent.OnTextToSpeech(
@@ -532,7 +533,6 @@ private fun ReaderScreen(lazyListState: LazyListState) {
                         sidePadding = sidePadding,
                         paragraphIndentation = paragraphIndentation,
                         fullscreenMode = mainState.value.fullscreen,
-                        doubleClickTranslationEnabled = mainState.value.doubleClickTranslation,
                         doubleClickTextToSpeechEnabled = mainState.value.doubleClickTextToSpeech,
                         toolbarHidden = toolbarHidden
                     )

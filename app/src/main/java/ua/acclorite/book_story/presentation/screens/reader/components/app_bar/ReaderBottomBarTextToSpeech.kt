@@ -1,6 +1,7 @@
 package ua.acclorite.book_story.presentation.screens.reader.components.app_bar
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,14 +12,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ua.acclorite.book_story.presentation.core.components.LocalReaderViewModel
 import ua.acclorite.book_story.presentation.core.util.noRippleClickable
@@ -29,8 +38,10 @@ import ua.acclorite.book_story.presentation.ui.Colors
  * Reader bottom bar text to speech.
  * Has a slider to change progress speed.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReaderBottomBarTextToSpeech() {
+    var sliderValue by remember { mutableFloatStateOf(0f) }
     Column(
         Modifier
             .fillMaxWidth()
@@ -51,7 +62,51 @@ fun ReaderBottomBarTextToSpeech() {
                 modifier = Modifier.weight(1f),
                 contentAlignment = Alignment.CenterStart
             ) {
-                BottomBarSlider()
+                CustomSlider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    value = sliderValue,
+                    onValueChange = {
+                        sliderValue = it
+                    },
+                    valueRange = 0f..50f,
+                    gap = 10,
+                    showIndicator = true,
+                    thumb = { thumbValue ->
+                        CustomSliderDefaults.Thumb(
+                            thumbValue = "$thumbValue%",
+                            color = Color.Transparent,
+                            size = 40.dp,
+                            modifier = Modifier.background(
+                                brush = Brush.linearGradient(listOf(Color.Cyan, Color.Blue)),
+                                shape = CircleShape
+                            )
+                        )
+                    },
+                    track = { sliderState ->
+                        Box(
+                            modifier = Modifier
+                                .track()
+                                .border(
+                                    width = 1.dp,
+                                    color = Color.LightGray.copy(alpha = 0.4f),
+                                    shape = CircleShape
+                                )
+                                .background(Color.White)
+                                .padding(3.5.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .progress(sliderState = sliderState)
+                                    .background(
+                                        brush = Brush.linearGradient(listOf(Color.Red, Color.Magenta))
+                                    )
+                            )
+                        }
+                    }
+                )
             }
         }
     }
@@ -70,6 +125,7 @@ private fun BottomBarSlider() {
     Slider(
         value = state.value.speedRate,
         onValueChange = {
+            onEvent(ReaderEvent.OnScrollTTS(it))
             onEvent(
                 ReaderEvent.OnChangeProgressTTS(
                     progress = it

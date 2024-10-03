@@ -43,7 +43,6 @@ private class CustomTextActionModeCallback(
     var onCopyRequested: (() -> Unit)? = null,
     var onShareRequested: (() -> Unit)? = null,
     var onWebSearchRequested: (() -> Unit)? = null,
-    var onTranslateRequested: (() -> Unit)? = null,
     var onDictionaryRequested: (() -> Unit)? = null
 ) : ActionMode.Callback {
     override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
@@ -65,11 +64,6 @@ private class CustomTextActionModeCallback(
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         }
 
-        onTranslateRequested?.let {
-            menu.add(0, MENU_ITEM_TRANSLATE, 3, context.getString(R.string.translate))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-        }
-
         onDictionaryRequested?.let {
             menu.add(0, MENU_ITEM_DICTIONARY, 4, context.getString(R.string.dictionary))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
@@ -87,7 +81,6 @@ private class CustomTextActionModeCallback(
             MENU_ITEM_COPY -> onCopyRequested?.invoke()
             MENU_ITEM_SHARE -> onShareRequested?.invoke()
             MENU_ITEM_WEB -> onWebSearchRequested?.invoke()
-            MENU_ITEM_TRANSLATE -> onTranslateRequested?.invoke()
             MENU_ITEM_DICTIONARY -> onDictionaryRequested?.invoke()
             else -> return false
         }
@@ -141,7 +134,6 @@ private class CustomSelectionToolbar(
     private val onCopyRequest: (() -> Unit)?,
     private val onShareRequest: ((String) -> Unit)?,
     private val onWebSearchRequest: ((String) -> Unit)?,
-    private val onTranslateRequest: ((String) -> Unit)?,
     private val onDictionaryRequest: ((String) -> Unit)?
 ) : TextToolbar {
     private var actionMode: ActionMode? = null
@@ -185,21 +177,6 @@ private class CustomSelectionToolbar(
             val currentClipboard = clipboardManager.text
 
             onWebSearchRequest?.invoke(currentClipboard.toString())
-
-            if (previousClipboard != null) {
-                clipboardManager.setPrimaryClip(
-                    previousClipboard
-                )
-            } else {
-                clipboardManager.setPrimaryClip(ClipData.newPlainText(null, " "))
-            }
-        }
-        callback.onTranslateRequested = {
-            val previousClipboard = clipboardManager.primaryClip
-            onCopyRequested?.invoke()
-            val currentClipboard = clipboardManager.text
-
-            onTranslateRequest?.invoke(currentClipboard.toString())
 
             if (previousClipboard != null) {
                 clipboardManager.setPrimaryClip(
@@ -256,7 +233,6 @@ fun CustomSelectionContainer(
     onCopyRequested: (() -> Unit),
     onShareRequested: ((String) -> Unit),
     onWebSearchRequested: ((String) -> Unit),
-    onTranslateRequested: ((String) -> Unit),
     onTextToSpeechRequested: ((String) -> Unit),
     onDictionaryRequested: ((String) -> Unit),
     content: @Composable (toolbarHidden: Boolean) -> Unit
@@ -277,9 +253,6 @@ fun CustomSelectionContainer(
             },
             onWebSearchRequest = {
                 onWebSearchRequested(it)
-            },
-            onTranslateRequest = {
-                onTranslateRequested(it)
             },
             onDictionaryRequest = {
                 onDictionaryRequested(it)
